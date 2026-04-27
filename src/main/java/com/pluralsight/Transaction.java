@@ -18,4 +18,54 @@ public class Transaction
         this.vendor = vendor;
         this.amount = amount;
     }
+
+    public LocalDateTime getDate()
+    {
+        return date;
+    }
+
+    public void setDate(LocalDateTime date)
+    {
+        this.date = date;
+    }
+
+    public LocalDateTime getTime()
+    {
+        return time;
+    }
+
+    public void setTime(LocalDateTime time)
+    {
+        this.time = time;
+    }
+
+    public String getDescription()
+    {
+        return description;
+    }
+
+    public void setDescription(String description)
+    {
+        this.description = description;
+    }
+
+    public String getVendor()
+    {
+        return vendor;
+    }
+
+    public void setVendor(String vendor)
+    {
+        this.vendor = vendor;
+    }
+
+    public double getAmount()
+    {
+        return amount;
+    }
+
+    public void setAmount(double amount)
+    {
+        this.amount = amount;
+    }
 }

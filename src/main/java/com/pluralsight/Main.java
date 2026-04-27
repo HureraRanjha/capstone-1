@@ -1,5 +1,10 @@
 package com.pluralsight;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Scanner;
 
 public class Main
@@ -27,7 +32,8 @@ public class Main
             switch (selection)
             {
                 case "D":
-                    System.out.println("Deposit");
+                    System.out.println("                 Deposit");
+                    addDeposit();
                     break;
                 case "P":
                     System.out.println("Payment");
@@ -41,6 +47,30 @@ public class Main
                     break;
             }
         }
+    }
 
+    private static void addDeposit()
+    {
+        LocalDate date = LocalDate.now();
+        LocalTime time = LocalTime.now().truncatedTo(ChronoUnit.SECONDS);
+
+        System.out.println("What is the description of the deposit: ");
+        String description = myScanner.nextLine();
+
+        System.out.println("Who is the vendor");
+        String vendor = myScanner.nextLine();
+
+        System.out.println("What is the amount");
+        double amount = Double.parseDouble(myScanner.nextLine());
+        try
+        {
+            FileWriter writer = new FileWriter("src/main/resources/transactions.csv", true);
+            String deposit = new Transaction(date, time, description, vendor, amount).displayTransaction();
+            writer.append(deposit);
+            writer.close();
+        } catch (IOException e)
+        {
+            System.err.println("Couldnt write to file tranactions.csv");
+        }
     }
 }

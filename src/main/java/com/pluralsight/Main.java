@@ -241,7 +241,7 @@ public class Main
     {
         for(Transaction t: transactions)
         {
-            if(t.getDate().getMonthValue() >= localDate.getMonthValue() && t.getDate().getDayOfMonth() >= localDate.getDayOfMonth() && t.getDate().getYear() == localDate.getYear())
+            if(t.getDate().getMonthValue() <= localDate.getMonthValue() && t.getDate().getDayOfMonth() <= localDate.getDayOfMonth() && t.getDate().getYear() == localDate.getYear())
             {
                 System.out.println(t.displayTransaction());
             }

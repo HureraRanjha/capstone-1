@@ -1,21 +1,52 @@
 package com.pluralsight;
 
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.sql.Array;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main
 {
     static Scanner myScanner = new Scanner(System.in);
-
+    static ArrayList<Transaction> transactions = new ArrayList<>();
     public static void main(String[] args)
     {
+        extractTransactions();
         loadHomeScreen();
     }
+    private static void extractTransactions()
+    {
+        try
+        {
+            FileReader fileReader = new FileReader("src/main/resources/transactions.csv");
+            BufferedReader bufReader = new BufferedReader(fileReader);
 
+            String input;
+            input = bufReader.readLine();
+            while ((input = bufReader.readLine()) != null)
+            {
+                String[] parsedLine = input.split("\\|");
+                LocalDate date = LocalDate.parse(parsedLine[0]);
+                LocalTime time = LocalTime.parse(parsedLine[1]);
+                String description = parsedLine[2];
+                String vendor = parsedLine[3];
+                double amount = Double.parseDouble(parsedLine[4]);
+
+                transactions.add(new Transaction(date, time, description, vendor, amount));
+            }
+        }
+        catch(FileNotFoundException e)
+        {
+            System.err.println("We could not find the file");
+        }
+        catch(IOException e)
+        {
+            System.err.println("Error in reading the file");
+        }
+    }
     private static void loadHomeScreen()
     {
         boolean repeat = true;
@@ -41,6 +72,7 @@ public class Main
                     break;
                 case "L":
                     System.out.println("Ledger");
+                    ledgerScreen();
                     break;
                 case "X":
                     System.out.println("Exit");
@@ -82,4 +114,19 @@ public class Main
             System.err.println("Couldnt write to file tranactions.csv");
         }
     }
+
+    private static void ledgerScreen()
+    {
+        displayEntry();
+    }
+
+    private static void displayEntry()
+    {
+        for (Transaction t: transactions)
+        {
+            t.displayTransaction();
+        }
+    }
+
+
 }

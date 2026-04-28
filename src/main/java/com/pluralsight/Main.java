@@ -33,10 +33,11 @@ public class Main
             {
                 case "D":
                     System.out.println("                 Deposit");
-                    addDeposit();
+                    makeTransaction("deposit");
                     break;
                 case "P":
                     System.out.println("Payment");
+                    makeTransaction("payment");
                     break;
                 case "L":
                     System.out.println("Ledger");
@@ -49,30 +50,32 @@ public class Main
         }
     }
 
-    private static void addDeposit()
+    private static void makeTransaction(String type)
     {
-        System.out.println("What is the date of this deposit (yyyy-MM-dd): ");
+        System.out.printf("What is the date of this %s (yyyy-MM-dd): ", type);
         String dateInput = myScanner.nextLine();
         LocalDate localDate = LocalDate.parse(dateInput);
 
-        System.out.println("What is the time of this deposit (hh:mm:ss): ");
+        System.out.printf("What is the time of this %s (hh:mm:ss): ", type);
         String timeInput = myScanner.nextLine();
 
         LocalTime localTime = LocalTime.parse(timeInput);
 
-        System.out.println("What is the description of the deposit: ");
+        System.out.printf("What is the description of the %s: ", type);
         String description = myScanner.nextLine();
 
-        System.out.println("Who is the vendor");
+        System.out.println("Who is the vendor: ");
         String vendor = myScanner.nextLine();
 
-        System.out.println("What is the amount");
+        System.out.println("What is the amount: ");
         double amount = Double.parseDouble(myScanner.nextLine());
+        if (type.equals("payment")) amount *= -1;
+
         try
         {
             FileWriter writer = new FileWriter("src/main/resources/transactions.csv", true);
-            String deposit = new Transaction(localDate, localTime, description, vendor, amount).displayTransaction();
-            writer.append(deposit);
+            String transaction = new Transaction(localDate, localTime, description, vendor, amount).displayTransaction();
+            writer.append(transaction);
             writer.close();
         } catch (IOException e)
         {

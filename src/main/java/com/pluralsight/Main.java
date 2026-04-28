@@ -51,8 +51,14 @@ public class Main
 
     private static void addDeposit()
     {
-        LocalDate date = LocalDate.now();
-        LocalTime time = LocalTime.now().truncatedTo(ChronoUnit.SECONDS);
+        System.out.println("What is the date of this deposit (yyyy-MM-dd): ");
+        String dateInput = myScanner.nextLine();
+        LocalDate localDate = LocalDate.parse(dateInput);
+
+        System.out.println("What is the time of this deposit (hh:mm:ss): ");
+        String timeInput = myScanner.nextLine();
+
+        LocalTime localTime = LocalTime.parse(timeInput);
 
         System.out.println("What is the description of the deposit: ");
         String description = myScanner.nextLine();
@@ -65,7 +71,7 @@ public class Main
         try
         {
             FileWriter writer = new FileWriter("src/main/resources/transactions.csv", true);
-            String deposit = new Transaction(date, time, description, vendor, amount).displayTransaction();
+            String deposit = new Transaction(localDate, localTime, description, vendor, amount).displayTransaction();
             writer.append(deposit);
             writer.close();
         } catch (IOException e)

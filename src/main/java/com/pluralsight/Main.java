@@ -1,17 +1,18 @@
 package com.pluralsight;
 
 import java.io.*;
-import java.sql.Array;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
 public class Main
 {
     static Scanner myScanner = new Scanner(System.in);
     static ArrayList<Transaction> transactions = new ArrayList<>();
+    static LocalDate localDate;
+
     public static void main(String[] args)
     {
         extractTransactions();
@@ -46,6 +47,7 @@ public class Main
         {
             System.err.println("Error in reading the file");
         }
+        Collections.reverse(transactions);
     }
     private static void loadHomeScreen()
     {
@@ -106,8 +108,11 @@ public class Main
         try
         {
             FileWriter writer = new FileWriter("src/main/resources/transactions.csv", true);
-            String transaction = new Transaction(localDate, localTime, description, vendor, amount).displayTransaction();
-            writer.append(transaction);
+            Transaction transaction = new Transaction(localDate, localTime, description, vendor, amount);
+            transactions.add(0, transaction);
+
+            String stringTransaction = transaction.displayTransaction();
+            writer.append(stringTransaction);
             writer.close();
         } catch (IOException e)
         {
@@ -117,16 +122,153 @@ public class Main
 
     private static void ledgerScreen()
     {
-        displayEntry();
-    }
-
-    private static void displayEntry()
-    {
-        for (Transaction t: transactions)
+        boolean repeat = true;
+        while(repeat)
         {
-            t.displayTransaction();
+            System.out.println("""
+                    Choose an action:
+                    (A) All Entries
+                    (D) Deposits 
+                    (P) Payments
+                    (R) Reports
+                    (H) Home
+                    """);
+            String selection = myScanner.nextLine();
+            switch(selection)
+            {
+                case "A":
+                    displayTransactions("all");
+                    break;
+                case "D":
+                    displayTransactions("deposit");
+                    break;
+                case "P":
+                    displayTransactions("payment");
+                    break;
+                case "R":
+                    reportsScreen();
+                    break;
+                case "H":
+                    repeat = false;
+                    break;
+            }
         }
     }
 
+    private static void displayTransactions(String type)
+    {
+        for (Transaction t: transactions)
+        {
+            if (type.equals("all")) System.out.println(t.displayTransaction());
+            else if (type.equals("deposit") && t.getAmount() > 0) System.out.println(t.displayTransaction());
+            else if (type.equals("payment") && t.getAmount() < 0) System.out.println(t.displayTransaction());
+        }
+    }
 
+    private static void reportsScreen()
+    {
+        localDate = LocalDate.now();
+        boolean repeat = true;
+        while(repeat)
+        {
+            System.out.println("""
+                    Choose an action:
+                    (1) Month to date
+                    (2) Previous Month 
+                    (3) Year to Date
+                    (4) Previous Year
+                    (5) Search by Vendor
+                    (0) Back to ledger
+                    """);
+            // Month to date start of the month
+            //Previous month start to the end
+            // Start of the year to now
+            //Previous year
+
+            String selection = myScanner.nextLine();
+            switch(selection)
+            {
+                case "1":
+                    monthToDate();
+                    break;
+                case "2":
+                    previousMonth();
+                    break;
+                case "3":
+                    yearToDate();
+                    break;
+                case "4":
+                    previousYear();
+                    break;
+                case "5":
+                    searchByVendor();
+                    break;
+                case "0":
+                    repeat = false;
+                    break;
+            }
+        }
+    }
+
+    private static void monthToDate()
+    {
+        for(Transaction t: transactions)
+        {
+            if(t.getDate().getMonthValue() == localDate.getMonthValue() && t.getDate().getYear() == localDate.getYear() && t.getDate().getDayOfMonth() <= localDate.getDayOfMonth())
+            {
+                System.out.println(t.displayTransaction());
+            }
+        }
+    }
+
+    private static void previousMonth()
+    {
+        for(Transaction t: transactions)
+        {
+            int checkMonth = 0;
+            if (t.getDate().getMonthValue() == 1)
+            {
+                checkMonth = 1;
+            }
+            if(t.getDate().getMonthValue() == localDate.getMonthValue() - 1 && t.getDate().getYear() == localDate.getYear() - checkMonth)
+            {
+                System.out.println(t.displayTransaction());
+            }
+        }
+    }
+
+    private static void yearToDate()
+    {
+        for(Transaction t: transactions)
+        {
+            if(t.getDate().getMonthValue() >= localDate.getMonthValue() && t.getDate().getDayOfMonth() >= localDate.getDayOfMonth() && t.getDate().getYear() == localDate.getYear())
+            {
+                System.out.println(t.displayTransaction());
+            }
+        }
+    }
+
+    private static void previousYear()
+    {
+        for(Transaction t: transactions)
+        {
+            if(t.getDate().getYear() == localDate.getYear() - 1)
+            {
+                System.out.println(t.displayTransaction());
+            }
+        }
+    }
+
+    private static void searchByVendor()
+    {
+        System.out.println("What vendor are you searching for? ");
+        String vendorName = myScanner.nextLine();
+        for(Transaction t: transactions)
+        {
+            if(t.getVendor().equals(vendorName))
+            {
+                System.out.println(t.displayTransaction());
+            }
+        }
+    }
 }

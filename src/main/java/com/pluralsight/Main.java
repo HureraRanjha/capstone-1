@@ -3,6 +3,7 @@ package com.pluralsight;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
@@ -15,10 +16,10 @@ public class Main
 
     public static void main(String[] args)
     {
-        extractTransactions();
-        loadHomeScreen();
+        loadTransactions();
+        displayHomeScreen();
     }
-    private static void extractTransactions()
+    private static void loadTransactions()
     {
         try
         {
@@ -49,7 +50,7 @@ public class Main
         }
         Collections.reverse(transactions);
     }
-    private static void loadHomeScreen()
+    private static void displayHomeScreen()
     {
         boolean repeat = true;
         while(repeat)
@@ -146,7 +147,7 @@ public class Main
                     displayTransactions("payment");
                     break;
                 case "R":
-                    reportsScreen();
+                    displayReportsScreen();
                     break;
                 case "H":
                     repeat = false;
@@ -165,7 +166,7 @@ public class Main
         }
     }
 
-    private static void reportsScreen()
+    private static void displayReportsScreen()
     {
         localDate = LocalDate.now();
         boolean repeat = true;
@@ -223,14 +224,23 @@ public class Main
 
     private static void previousMonth()
     {
+        int year;
+        int month;
+        if(localDate.getMonthValue() == 1)
+        {
+            year = localDate.getYear() - 1 ;
+            month = 12;
+        }
+        else
+        {
+            year = localDate.getYear();
+            month = localDate.getMonthValue() - 1;
+        }
+
+
         for(Transaction t: transactions)
         {
-            int checkMonth = 0;
-            if (t.getDate().getMonthValue() == 1)
-            {
-                checkMonth = 1;
-            }
-            if(t.getDate().getMonthValue() == localDate.getMonthValue() - 1 && t.getDate().getYear() == localDate.getYear() - checkMonth)
+            if(t.getDate().getMonthValue() == month && t.getDate().getYear() == year)
             {
                 System.out.println(t.displayTransaction());
             }
@@ -258,6 +268,13 @@ public class Main
             }
         }
     }
+
+//    public static ArrayList<Transaction> applyCustomFilters(ArrayList<Transaction> transactions) {
+//        ArrayList<Transaction> results = filterByDates(transactions);
+//        results = filterByDescription(results);
+//
+//        return  results;
+//    }
 
     private static void searchByVendor()
     {

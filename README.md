@@ -1,7 +1,7 @@
 # 💰Money Bag Inc Account App 💰
 
 ## Description
-This is a simple CLI app that allows users to add transactions, searching deposits and payments, and custom searching.
+This is a simple CLI app that allows users to add transactions, search deposits and payments, and custom searching.
 Each transaction is saved to transactions.csv and the filters are outputted to the CLI
 
 ## Running the Code

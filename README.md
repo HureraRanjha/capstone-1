@@ -10,7 +10,7 @@ Ideally run the Main.java class in IntelliJ
 ## The Code I'm Most Proud of
 I am proud of the filterByDates() function as that was the funnest function to think about how to implement. 
 I first checked if the user inputted a string for both the start and end date and when they did not I would 
-not assign a value and let the default value stay null. 
+not assign a value to the LocalDate object and let the default value stay null. 
 
 I also liked how i broke up the code so that while going through each transaction in the for each loop the 
 if statement is easy to read and follow

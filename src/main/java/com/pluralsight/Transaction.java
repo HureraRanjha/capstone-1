@@ -11,6 +11,14 @@ public class Transaction
     private String vendor;
     private double amount;
 
+    /**
+     * Constructor for LocalDate, LocalTime, description, vendor, and amount (+/-)
+     * @param date
+     * @param time
+     * @param description
+     * @param vendor
+     * @param amount
+     */
     public Transaction(LocalDate date, LocalTime time, String description, String vendor, double amount)
     {
         this.date = date;
@@ -70,6 +78,10 @@ public class Transaction
         this.amount = amount;
     }
 
+    /**
+     * Displays Transactions in csv format
+     * @return
+     */
     public String displayTransaction()
     {
         return String.format("\n" + getDate() + "|" + getTime() + "|" + getDescription() + "|" + getVendor() + "|" + getAmount());
